@@ -49,9 +49,9 @@ Tracks the commits in a [git](http://git-scm.com/) repository.
   `GIT_SSL_NO_VERIFY=true`.
 
 * `tag_filter`: *Optional.* If specified, the resource will only detect commits
-  that have a tag matching the specified expression. Patterns are
-  [glob(7)](http://man7.org/linux/man-pages/man7/glob.7.html) compatible (as
-  in, bash compatible).
+  that have a tag matching the expression that have been made against
+  the `branch`. Patterns are [glob(7)](http://man7.org/linux/man-pages/man7/glob.7.html)
+  compatible (as in, bash compatible).
 
 * `git_config`: *Optional.* If specified as (list of pairs `name` and `value`)
   it will configure git global options, setting each name with each value.
@@ -152,6 +152,12 @@ If `commit_verification_keys` or `commit_verification_key_ids` is specified in
 the source configuration, it will additionally verify that the resulting commit
 has been GPG signed by one of the specified keys. It will error if this is not
 the case.
+
+#### Committer notification on failed builds
+
+For ease of use there is a special file `.git/committer` which is populated with
+the email address of the author of the last commit. This can be used together with 
+an email resource like [mdomke/concourse-email-resource](https://github.com/mdomke/concourse-email-resource) to notify the committer in an on_failure step.
 
 ### `out`: Push to a repository.
 
