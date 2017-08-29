@@ -21,6 +21,7 @@ configure_credentials $payload
 
 uri=$(jq -r '.source.uri // ""' < $payload)
 branch=$(jq -r '.source.branch // ""' < $payload)
+fetch_tags=$(jq -r '.source.fetch_tags // ""' < $payload)
 paths="$(jq -r '(.source.paths // ["."])[]' < $payload)" # those "'s are important
 ignore_paths="$(jq -r '":!" + (.source.ignore_paths // [])[]' < $payload)" # these ones too
 tag_filter=$(jq -r '.source.tag_filter // ""' < $payload)
@@ -31,7 +32,6 @@ skip_ci_disabled=$(jq -r '.source.disable_ci_skip // false' < $payload)
 configure_git_global "${git_config_payload}"
 
 destination=$TMPDIR/git-resource-repo-cache
-
 if [ -d $destination ]; then
   cd $destination
   git fetch
@@ -67,7 +67,9 @@ ci_skip=""
 if [ "$skip_ci_disabled" != "true" ]; then
   ci_skip="--grep \\[ci\\sskip\\] --grep \\[skip\\sci\\] --invert-grep"
 fi
-
+if [ -n "$fetch_tags" ]; then
+  git fetch --tags --update-head-ok
+fi
 if [ -n "$tag_filter" ]; then
   {
     if [ -n "$ref" ]; then

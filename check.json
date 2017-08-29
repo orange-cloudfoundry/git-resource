@@ -1,0 +1,8 @@
+{
+  "source": {
+    "uri": "https://github.com/cloudfoundry/java-buildpack.git",
+    "tag_filter": "v*",
+    "fetch_tags": true
+  },
+  "version": {}
+}
